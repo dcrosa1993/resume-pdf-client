@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-slate-100 px-4 py-6 md:px-6 lg:px-8">
+<div class="min-h-screen bg-white px-4 py-6 md:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
     <!-- Header -->
     <header class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -10,16 +10,24 @@
         </p>
       </div>
 
-      <div class="flex gap-2">
+      <div class="flex flex-wrap gap-2">
         <button mat-stroked-button type="button" (click)="toggleJson()">
+          <mat-icon>
+            {{ showJson() ? 'code_off' : 'code' }}
+          </mat-icon>
+
           {{ showJson() ? 'Hide JSON' : 'View JSON' }}
         </button>
 
-        <button mat-flat-button color="primary" type="button">Generate PDF</button>
+        <button mat-flat-button color="primary" type="button">
+          <mat-icon> picture_as_pdf </mat-icon>
+
+          Generate PDF
+        </button>
       </div>
     </header>
 
-    <!-- Main layout -->
+    <!-- Main -->
     <div
       class="grid gap-6"
       [class.lg:grid-cols-2]="showJson()"
@@ -27,145 +35,1035 @@
     >
       <!-- FORM -->
       <section>
-        <form [formGroup]="form" class="space-y-6">
-          <!-- Personal Information -->
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title> Personal Information </mat-card-title>
+        <form [formGroup]="form">
+          <mat-horizontal-stepper [linear]="false" class="bg-white">
+            <!-- ================================================= -->
+            <!-- PERSONAL -->
+            <!-- ================================================= -->
 
-              <mat-card-subtitle>
-                Your basic contact and professional information.
-              </mat-card-subtitle>
-            </mat-card-header>
+            <mat-step label="Personal">
+              <div class="space-y-6 py-6">
+                <mat-card class="flex flex-col gap-4">
+                  <mat-card-header>
+                    <mat-card-title> Personal Information </mat-card-title>
 
-            <mat-card-content class="pt-6">
-              <div formGroupName="personal" class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <mat-form-field appearance="outline">
-                  <mat-label>First Name</mat-label>
+                    <mat-card-subtitle>
+                      Your basic contact and professional information.
+                    </mat-card-subtitle>
+                  </mat-card-header>
 
-                  <input matInput formControlName="firstName" autocomplete="given-name" />
-                </mat-form-field>
+                  <mat-card-content
+                    class="grid! grid-cols-1 gap-4 pt-6 md:grid-cols-2"
+                    formGroupName="personal"
+                  >
+                    <mat-form-field appearance="outline">
+                      <mat-label> First Name </mat-label>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Last Name</mat-label>
+                      <input matInput formControlName="firstName" />
+                    </mat-form-field>
 
-                  <input matInput formControlName="lastName" autocomplete="family-name" />
-                </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label> Last Name </mat-label>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Job Title</mat-label>
+                      <input matInput formControlName="lastName" />
+                    </mat-form-field>
 
-                  <input
-                    matInput
-                    formControlName="jobTitle"
-                    placeholder="Senior Software Engineer"
-                  />
-                </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label> Job Title </mat-label>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Email</mat-label>
+                      <input
+                        matInput
+                        formControlName="jobTitle"
+                        placeholder="Senior Software Engineer"
+                      />
+                    </mat-form-field>
 
-                  <input matInput type="email" formControlName="email" autocomplete="email" />
-                </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label> Email </mat-label>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Phone</mat-label>
+                      <input matInput type="email" formControlName="email" />
+                    </mat-form-field>
 
-                  <input matInput formControlName="phone" autocomplete="tel" />
-                </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label> Phone </mat-label>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Location</mat-label>
+                      <input matInput formControlName="phone" />
+                    </mat-form-field>
 
-                  <input matInput formControlName="location" placeholder="Miami, FL" />
-                </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label> Location </mat-label>
 
-                <mat-form-field appearance="outline" class="md:col-span-2">
-                  <mat-label>LinkedIn</mat-label>
+                      <input matInput formControlName="location" placeholder="Miami, FL" />
+                    </mat-form-field>
 
-                  <input
-                    matInput
-                    type="url"
-                    formControlName="linkedin"
-                    placeholder="https://linkedin.com/in/..."
-                  />
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="md:col-span-2">
+                      <mat-label> LinkedIn </mat-label>
 
-                <mat-form-field appearance="outline" class="md:col-span-2">
-                  <mat-label>GitHub</mat-label>
+                      <input
+                        matInput
+                        formControlName="linkedin"
+                        placeholder="https://linkedin.com/in/..."
+                      />
+                    </mat-form-field>
 
-                  <input
-                    matInput
-                    type="url"
-                    formControlName="github"
-                    placeholder="https://github.com/..."
-                  />
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="md:col-span-2">
+                      <mat-label> GitHub </mat-label>
 
-                <mat-form-field appearance="outline" class="md:col-span-2">
-                  <mat-label>Website</mat-label>
+                      <input
+                        matInput
+                        formControlName="github"
+                        placeholder="https://github.com/..."
+                      />
+                    </mat-form-field>
 
-                  <input
-                    matInput
-                    type="url"
-                    formControlName="website"
-                    placeholder="https://example.com"
-                  />
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="md:col-span-2">
+                      <mat-label> Website </mat-label>
+
+                      <input matInput formControlName="website" placeholder="https://example.com" />
+                    </mat-form-field>
+                  </mat-card-content>
+                </mat-card>
+
+                <!-- Template -->
+                <mat-card class="flex flex-col gap-4">
+                  <mat-card-header>
+                    <mat-card-title> Resume Template </mat-card-title>
+
+                    <mat-card-subtitle>
+                      Choose how your resume will be rendered.
+                    </mat-card-subtitle>
+                  </mat-card-header>
+
+                  <mat-card-content class="pt-6">
+                    <mat-form-field appearance="outline" class="w-full">
+                      <mat-label> Template </mat-label>
+
+                      <mat-select formControlName="template">
+                        <mat-option value="classic"> Classic </mat-option>
+
+                        <mat-option value="modern"> Modern </mat-option>
+
+                        <mat-option value="compact"> Compact </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </mat-card-content>
+                </mat-card>
+
+                <!-- Navigation -->
+                <div class="flex justify-end pt-2">
+                  <button mat-flat-button color="primary" type="button" matStepperNext>
+                    Next
+                    <mat-icon> arrow_forward </mat-icon>
+                  </button>
+                </div>
               </div>
-            </mat-card-content>
-          </mat-card>
+            </mat-step>
 
-          <!-- Template -->
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title> Resume Template </mat-card-title>
+            <!-- ================================================= -->
+            <!-- SUMMARY -->
+            <!-- ================================================= -->
 
-              <mat-card-subtitle> Choose how your resume will be rendered. </mat-card-subtitle>
-            </mat-card-header>
+            <mat-step label="Summary">
+              <div class="space-y-6 py-6">
+                <mat-card class="flex flex-col gap-4">
+                  <mat-card-header>
+                    <mat-card-title> Professional Summary </mat-card-title>
 
-            <mat-card-content class="pt-6">
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Template</mat-label>
+                    <mat-card-subtitle>
+                      A concise summary of your professional profile.
+                    </mat-card-subtitle>
+                  </mat-card-header>
 
-                <mat-select formControlName="template">
-                  <mat-option value="classic"> Classic </mat-option>
+                  <mat-card-content class="pt-6">
+                    <mat-form-field appearance="outline" class="w-full">
+                      <mat-label> Summary </mat-label>
 
-                  <mat-option value="modern"> Modern </mat-option>
+                      <textarea
+                        matInput
+                        rows="10"
+                        formControlName="summary"
+                        placeholder="Experienced software engineer with..."
+                      ></textarea>
+                    </mat-form-field>
+                  </mat-card-content>
+                </mat-card>
 
-                  <mat-option value="compact"> Compact </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </mat-card-content>
-          </mat-card>
+                <div class="flex justify-between pt-2">
+                  <button mat-stroked-button type="button" matStepperPrevious>
+                    <mat-icon> arrow_back </mat-icon>
+                    Back
+                  </button>
 
-          <!-- Summary -->
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title> Professional Summary </mat-card-title>
+                  <button mat-flat-button color="primary" type="button" matStepperNext>
+                    Next
+                    <mat-icon> arrow_forward </mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-step>
 
-              <mat-card-subtitle>
-                A concise summary of your professional profile.
-              </mat-card-subtitle>
-            </mat-card-header>
+            <!-- ================================================= -->
+            <!-- EXPERIENCE -->
+            <!-- ================================================= -->
 
-            <mat-card-content class="pt-6">
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Summary</mat-label>
+            <mat-step label="Experience">
+              <div class="space-y-6 py-6">
+                <mat-card class="flex flex-col gap-4">
+                  <mat-card-header
+                    class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div>
+                      <mat-card-title> Professional Experience </mat-card-title>
 
-                <textarea
-                  matInput
-                  formControlName="summary"
-                  rows="7"
-                  placeholder="Experienced software engineer with..."
-                ></textarea>
-              </mat-form-field>
-            </mat-card-content>
-          </mat-card>
+                      <mat-card-subtitle>
+                        Add your professional work experience.
+                      </mat-card-subtitle>
+                    </div>
+
+                    <button mat-flat-button color="primary" type="button" (click)="addExperience()">
+                      <mat-icon> add </mat-icon>
+                      Add Experience
+                    </button>
+                  </mat-card-header>
+
+                  <mat-card-content class="space-y-6 pt-6">
+                    <div formArrayName="experience">
+                      @for (
+                        experience of experienceArray.controls;
+                        track $index;
+                        let experienceIndex = $index
+                      ) {
+                        <div
+                          [formGroupName]="experienceIndex"
+                          class="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-5 last:mb-0"
+                        >
+                          <div class="mb-4 flex items-center justify-between">
+                            <h3 class="font-semibold text-slate-800">
+                              Experience
+                              {{ experienceIndex + 1 }}
+                            </h3>
+
+                            <button
+                              mat-icon-button
+                              color="warn"
+                              type="button"
+                              (click)="removeExperience(experienceIndex)"
+                              aria-label="Remove experience"
+                            >
+                              <mat-icon> delete </mat-icon>
+                            </button>
+                          </div>
+
+                          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <mat-form-field appearance="outline">
+                              <mat-label> Position </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="position"
+                                placeholder="Senior Software Engineer"
+                              />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Company </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="company"
+                                placeholder="Example Inc."
+                              />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Location </mat-label>
+
+                              <input matInput formControlName="location" placeholder="Remote" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Start Date </mat-label>
+
+                              <input matInput formControlName="startDate" placeholder="2022-01" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> End Date </mat-label>
+
+                              <input matInput formControlName="endDate" placeholder="Present" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="md:col-span-2">
+                              <mat-label> Description </mat-label>
+
+                              <textarea matInput rows="4" formControlName="description"></textarea>
+                            </mat-form-field>
+                          </div>
+
+                          <!-- Achievements -->
+
+                          <div class="mt-6">
+                            <div class="mb-3 flex items-center justify-between">
+                              <h4 class="font-medium text-slate-700">Achievements</h4>
+
+                              <button
+                                mat-stroked-button
+                                type="button"
+                                (click)="addAchievement(experienceIndex)"
+                              >
+                                <mat-icon> add </mat-icon>
+                                Add Achievement
+                              </button>
+                            </div>
+
+                            <div formArrayName="achievements" class="space-y-2">
+                              @for (
+                                achievement of getAchievements(experienceIndex).controls;
+                                track $index;
+                                let achievementIndex = $index
+                              ) {
+                                <div class="flex gap-2">
+                                  <mat-form-field appearance="outline" class="flex-1">
+                                    <mat-label> Achievement </mat-label>
+
+                                    <input
+                                      matInput
+                                      [formControlName]="achievementIndex"
+                                      placeholder="Reduced API response time by 35%"
+                                    />
+                                  </mat-form-field>
+
+                                  <button
+                                    mat-icon-button
+                                    color="warn"
+                                    type="button"
+                                    (click)="removeAchievement(experienceIndex, achievementIndex)"
+                                  >
+                                    <mat-icon> delete </mat-icon>
+                                  </button>
+                                </div>
+                              }
+                            </div>
+                          </div>
+
+                          <!-- Technologies -->
+
+                          <div class="mt-6">
+                            <div class="mb-3">
+                              <h4 class="font-medium text-slate-700">Technologies</h4>
+
+                              <p class="mt-1 text-sm text-slate-500">
+                                Add technologies used in this position.
+                              </p>
+                            </div>
+
+                            <mat-form-field appearance="outline" class="w-full">
+                              <mat-label> Add technology </mat-label>
+
+                              <input
+                                matInput
+                                placeholder="Angular"
+                                (keydown.enter)="
+                                  addExperienceTechnologyFromInput(experienceIndex, $event)
+                                "
+                              />
+
+                              <mat-hint> Press Enter to add a technology. </mat-hint>
+                            </mat-form-field>
+
+                            @if (getExperienceTechnologies(experienceIndex).length > 0) {
+                              <mat-chip-set
+                                class="mt-2 flex flex-wrap gap-2"
+                                aria-label="Experience technologies"
+                              >
+                                @for (
+                                  technology of getExperienceTechnologies(experienceIndex).controls;
+                                  track $index;
+                                  let technologyIndex = $index
+                                ) {
+                                  <mat-chip
+                                    [removable]="true"
+                                    (removed)="
+                                      removeExperienceTechnology(experienceIndex, technologyIndex)
+                                    "
+                                  >
+                                    {{ technology.value }}
+
+                                    <button
+                                      matChipRemove
+                                      type="button"
+                                      [attr.aria-label]="'Remove ' + technology.value"
+                                    >
+                                      <mat-icon>cancel</mat-icon>
+                                    </button>
+                                  </mat-chip>
+                                }
+                              </mat-chip-set>
+                            }
+                          </div>
+                        </div>
+                      }
+
+                      @if (experienceArray.length === 0) {
+                        <div
+                          class="rounded-xl border border-dashed border-slate-300 p-10 text-center"
+                        >
+                          <mat-icon class="mb-2 text-slate-400"> work_outline </mat-icon>
+
+                          <p class="text-sm text-slate-500">
+                            No professional experience added yet.
+                          </p>
+                        </div>
+                      }
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <div class="flex justify-between pt-2">
+                  <button mat-stroked-button type="button" matStepperPrevious>
+                    <mat-icon> arrow_back </mat-icon>
+                    Back
+                  </button>
+
+                  <button mat-flat-button color="primary" type="button" matStepperNext>
+                    Next
+                    <mat-icon> arrow_forward </mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-step>
+
+            <!-- ================================================= -->
+            <!-- SKILLS -->
+            <!-- ================================================= -->
+
+            <mat-step label="Skills">
+              <div class="space-y-6 py-6">
+                <mat-card>
+                  <mat-card-header>
+                    <mat-card-title> Skills </mat-card-title>
+
+                    <mat-card-subtitle> Add your technical and soft skills. </mat-card-subtitle>
+                  </mat-card-header>
+
+                  <mat-card-content formGroupName="skills" class="space-y-8 pt-6">
+                    <!-- Technical -->
+
+                    <div>
+                      <div class="mb-4">
+                        <h3 class="font-semibold text-slate-800">Technical Skills</h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                          Add technologies, frameworks, tools and other technical skills.
+                        </p>
+                      </div>
+
+                      <mat-form-field appearance="outline" class="w-full">
+                        <mat-label> Add technical skill </mat-label>
+
+                        <input
+                          matInput
+                          placeholder="TypeScript"
+                          (keydown.enter)="addTechnicalSkillFromInput($event)"
+                        />
+
+                        <mat-hint> Press Enter to add a skill. </mat-hint>
+                      </mat-form-field>
+
+                      @if (technicalSkillsArray.length > 0) {
+                        <mat-chip-set
+                          class="mt-2 flex flex-wrap gap-2"
+                          aria-label="Technical skills"
+                        >
+                          @for (
+                            skill of technicalSkillsArray.controls;
+                            track $index;
+                            let skillIndex = $index
+                          ) {
+                            <mat-chip
+                              [removable]="true"
+                              (removed)="removeTechnicalSkill(skillIndex)"
+                            >
+                              {{ skill.value }}
+
+                              <button
+                                matChipRemove
+                                type="button"
+                                [attr.aria-label]="'Remove ' + skill.value"
+                              >
+                                <mat-icon>cancel</mat-icon>
+                              </button>
+                            </mat-chip>
+                          }
+                        </mat-chip-set>
+                      }
+                    </div>
+
+                    <!-- Soft -->
+
+                    <div>
+                      <div class="mb-4">
+                        <h3 class="font-semibold text-slate-800">Soft Skills</h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                          Add communication, leadership and interpersonal skills.
+                        </p>
+                      </div>
+
+                      <mat-form-field appearance="outline" class="w-full">
+                        <mat-label> Add soft skill </mat-label>
+
+                        <input
+                          matInput
+                          placeholder="Leadership"
+                          (keydown.enter)="addSoftSkillFromInput($event)"
+                        />
+
+                        <mat-hint> Press Enter to add a skill. </mat-hint>
+                      </mat-form-field>
+
+                      @if (softSkillsArray.length > 0) {
+                        <mat-chip-set class="mt-2 flex flex-wrap gap-2" aria-label="Soft skills">
+                          @for (
+                            skill of softSkillsArray.controls;
+                            track $index;
+                            let skillIndex = $index
+                          ) {
+                            <mat-chip [removable]="true" (removed)="removeSoftSkill(skillIndex)">
+                              {{ skill.value }}
+
+                              <button
+                                matChipRemove
+                                type="button"
+                                [attr.aria-label]="'Remove ' + skill.value"
+                              >
+                                <mat-icon>cancel</mat-icon>
+                              </button>
+                            </mat-chip>
+                          }
+                        </mat-chip-set>
+                      }
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <div class="flex justify-between pt-2">
+                  <button mat-stroked-button type="button" matStepperPrevious>
+                    <mat-icon> arrow_back </mat-icon>
+                    Back
+                  </button>
+
+                  <button mat-flat-button color="primary" type="button" matStepperNext>
+                    Next
+                    <mat-icon> arrow_forward </mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-step>
+
+            <!-- ================================================= -->
+            <!-- PROJECTS -->
+            <!-- ================================================= -->
+
+            <mat-step label="Projects">
+              <div class="space-y-6 py-6">
+                <mat-card>
+                  <mat-card-header
+                    class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div>
+                      <mat-card-title> Projects </mat-card-title>
+
+                      <mat-card-subtitle>
+                        Highlight relevant personal or professional projects.
+                      </mat-card-subtitle>
+                    </div>
+
+                    <button mat-flat-button color="primary" type="button" (click)="addProject()">
+                      <mat-icon> add </mat-icon>
+                      Add Project
+                    </button>
+                  </mat-card-header>
+
+                  <mat-card-content class="space-y-6 pt-6">
+                    <div formArrayName="projects">
+                      @for (
+                        project of projectsArray.controls;
+                        track $index;
+                        let projectIndex = $index
+                      ) {
+                        <div
+                          [formGroupName]="projectIndex"
+                          class="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-5 last:mb-0"
+                        >
+                          <div class="mb-4 flex items-center justify-between">
+                            <h3 class="font-semibold text-slate-800">
+                              Project
+                              {{ projectIndex + 1 }}
+                            </h3>
+
+                            <button
+                              mat-icon-button
+                              color="warn"
+                              type="button"
+                              (click)="removeProject(projectIndex)"
+                            >
+                              <mat-icon> delete </mat-icon>
+                            </button>
+                          </div>
+
+                          <div class="space-y-4">
+                            <mat-form-field appearance="outline" class="w-full">
+                              <mat-label> Project Name </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="name"
+                                placeholder="Inventory Management System"
+                              />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-full">
+                              <mat-label> Description </mat-label>
+
+                              <textarea matInput rows="4" formControlName="description"></textarea>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-full">
+                              <mat-label> URL </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="url"
+                                placeholder="https://github.com/..."
+                              />
+                            </mat-form-field>
+                          </div>
+
+                          <!-- Project technologies -->
+
+                          <div class="mt-5">
+                            <div class="mb-3">
+                              <h4 class="font-medium text-slate-700">Technologies</h4>
+
+                              <p class="mt-1 text-sm text-slate-500">
+                                Add technologies used in this project.
+                              </p>
+                            </div>
+
+                            <mat-form-field appearance="outline" class="w-full">
+                              <mat-label> Add technology </mat-label>
+
+                              <input
+                                matInput
+                                placeholder="NestJS"
+                                (keydown.enter)="
+                                  addProjectTechnologyFromInput(projectIndex, $event)
+                                "
+                              />
+
+                              <mat-hint> Press Enter to add a technology. </mat-hint>
+                            </mat-form-field>
+
+                            @if (getProjectTechnologies(projectIndex).length > 0) {
+                              <mat-chip-set
+                                class="mt-2 flex flex-wrap gap-2"
+                                aria-label="Project technologies"
+                              >
+                                @for (
+                                  technology of getProjectTechnologies(projectIndex).controls;
+                                  track $index;
+                                  let technologyIndex = $index
+                                ) {
+                                  <mat-chip
+                                    [removable]="true"
+                                    (removed)="
+                                      removeProjectTechnology(projectIndex, technologyIndex)
+                                    "
+                                  >
+                                    {{ technology.value }}
+
+                                    <button
+                                      matChipRemove
+                                      type="button"
+                                      [attr.aria-label]="'Remove ' + technology.value"
+                                    >
+                                      <mat-icon>cancel</mat-icon>
+                                    </button>
+                                  </mat-chip>
+                                }
+                              </mat-chip-set>
+                            }
+                          </div>
+                        </div>
+                      }
+
+                      @if (projectsArray.length === 0) {
+                        <div
+                          class="rounded-xl border border-dashed border-slate-300 p-10 text-center"
+                        >
+                          <mat-icon class="mb-2 text-slate-400"> folder_open </mat-icon>
+
+                          <p class="text-sm text-slate-500">No projects added yet.</p>
+                        </div>
+                      }
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <div class="flex justify-between pt-2">
+                  <button mat-stroked-button type="button" matStepperPrevious>
+                    <mat-icon> arrow_back </mat-icon>
+                    Back
+                  </button>
+
+                  <button mat-flat-button color="primary" type="button" matStepperNext>
+                    Next
+                    <mat-icon> arrow_forward </mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-step>
+
+            <!-- ================================================= -->
+            <!-- EDUCATION -->
+            <!-- ================================================= -->
+
+            <mat-step label="Education">
+              <div class="space-y-6 py-6">
+                <mat-card>
+                  <mat-card-header
+                    class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div>
+                      <mat-card-title> Education </mat-card-title>
+
+                      <mat-card-subtitle> Add your academic background. </mat-card-subtitle>
+                    </div>
+
+                    <button mat-flat-button color="primary" type="button" (click)="addEducation()">
+                      <mat-icon> add </mat-icon>
+                      Add Education
+                    </button>
+                  </mat-card-header>
+
+                  <mat-card-content class="space-y-5 pt-6">
+                    <div formArrayName="education">
+                      @for (
+                        education of educationArray.controls;
+                        track $index;
+                        let educationIndex = $index
+                      ) {
+                        <div
+                          [formGroupName]="educationIndex"
+                          class="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-5 last:mb-0"
+                        >
+                          <div class="mb-4 flex items-center justify-between">
+                            <h3 class="font-semibold text-slate-800">
+                              Education
+                              {{ educationIndex + 1 }}
+                            </h3>
+
+                            <button
+                              mat-icon-button
+                              color="warn"
+                              type="button"
+                              (click)="removeEducation(educationIndex)"
+                            >
+                              <mat-icon> delete </mat-icon>
+                            </button>
+                          </div>
+
+                          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <mat-form-field appearance="outline">
+                              <mat-label> Institution </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="institution"
+                                placeholder="University"
+                              />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Degree </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="degree"
+                                placeholder="Software Engineer"
+                              />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Field of Study </mat-label>
+
+                              <input matInput formControlName="fieldOfStudy" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Location </mat-label>
+
+                              <input matInput formControlName="location" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Start Date </mat-label>
+
+                              <input matInput formControlName="startDate" placeholder="2012" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> End Date </mat-label>
+
+                              <input matInput formControlName="endDate" placeholder="2017" />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      }
+
+                      @if (educationArray.length === 0) {
+                        <div
+                          class="rounded-xl border border-dashed border-slate-300 p-10 text-center"
+                        >
+                          <p class="text-sm text-slate-500">No education added yet.</p>
+                        </div>
+                      }
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <div class="flex justify-between pt-2">
+                  <button mat-stroked-button type="button" matStepperPrevious>
+                    <mat-icon> arrow_back </mat-icon>
+                    Back
+                  </button>
+
+                  <button mat-flat-button color="primary" type="button" matStepperNext>
+                    Next
+                    <mat-icon> arrow_forward </mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-step>
+
+            <!-- ================================================= -->
+            <!-- CERTIFICATIONS -->
+            <!-- ================================================= -->
+
+            <mat-step label="Certifications">
+              <div class="space-y-6 py-6">
+                <mat-card>
+                  <mat-card-header
+                    class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div>
+                      <mat-card-title> Certifications </mat-card-title>
+
+                      <mat-card-subtitle> Add professional certifications. </mat-card-subtitle>
+                    </div>
+
+                    <button
+                      mat-flat-button
+                      color="primary"
+                      type="button"
+                      (click)="addCertification()"
+                    >
+                      <mat-icon> add </mat-icon>
+                      Add Certification
+                    </button>
+                  </mat-card-header>
+
+                  <mat-card-content class="space-y-5 pt-6">
+                    <div formArrayName="certifications">
+                      @for (
+                        certification of certificationsArray.controls;
+                        track $index;
+                        let certificationIndex = $index
+                      ) {
+                        <div
+                          [formGroupName]="certificationIndex"
+                          class="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-5 last:mb-0"
+                        >
+                          <div class="mb-4 flex items-center justify-between">
+                            <h3 class="font-semibold text-slate-800">
+                              Certification
+                              {{ certificationIndex + 1 }}
+                            </h3>
+
+                            <button
+                              mat-icon-button
+                              color="warn"
+                              type="button"
+                              (click)="removeCertification(certificationIndex)"
+                            >
+                              <mat-icon> delete </mat-icon>
+                            </button>
+                          </div>
+
+                          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <mat-form-field appearance="outline">
+                              <mat-label> Name </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="name"
+                                placeholder="AWS Certified Developer"
+                              />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Issuer </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="issuer"
+                                placeholder="Amazon Web Services"
+                              />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Date </mat-label>
+
+                              <input matInput formControlName="date" placeholder="2025" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Verification URL </mat-label>
+
+                              <input matInput formControlName="url" placeholder="https://..." />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      }
+
+                      @if (certificationsArray.length === 0) {
+                        <div
+                          class="rounded-xl border border-dashed border-slate-300 p-10 text-center"
+                        >
+                          <p class="text-sm text-slate-500">No certifications added yet.</p>
+                        </div>
+                      }
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <div class="flex justify-between pt-2">
+                  <button mat-stroked-button type="button" matStepperPrevious>
+                    <mat-icon> arrow_back </mat-icon>
+                    Back
+                  </button>
+
+                  <button mat-flat-button color="primary" type="button" matStepperNext>
+                    Next
+                    <mat-icon> arrow_forward </mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-step>
+
+            <!-- ================================================= -->
+            <!-- LANGUAGES -->
+            <!-- ================================================= -->
+
+            <mat-step label="Languages">
+              <div class="space-y-6 py-6">
+                <mat-card>
+                  <mat-card-header
+                    class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div>
+                      <mat-card-title> Languages </mat-card-title>
+
+                      <mat-card-subtitle> Add languages and proficiency levels. </mat-card-subtitle>
+                    </div>
+
+                    <button mat-flat-button color="primary" type="button" (click)="addLanguage()">
+                      <mat-icon> add </mat-icon>
+                      Add Language
+                    </button>
+                  </mat-card-header>
+
+                  <mat-card-content class="space-y-5 pt-6">
+                    <div formArrayName="languages">
+                      @for (
+                        language of languagesArray.controls;
+                        track $index;
+                        let languageIndex = $index
+                      ) {
+                        <div
+                          [formGroupName]="languageIndex"
+                          class="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-5 last:mb-0"
+                        >
+                          <div class="mb-4 flex items-center justify-between">
+                            <h3 class="font-semibold text-slate-800">
+                              Language
+                              {{ languageIndex + 1 }}
+                            </h3>
+
+                            <button
+                              mat-icon-button
+                              color="warn"
+                              type="button"
+                              (click)="removeLanguage(languageIndex)"
+                            >
+                              <mat-icon> delete </mat-icon>
+                            </button>
+                          </div>
+
+                          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <mat-form-field appearance="outline">
+                              <mat-label> Language </mat-label>
+
+                              <input matInput formControlName="name" placeholder="English" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                              <mat-label> Level </mat-label>
+
+                              <input
+                                matInput
+                                formControlName="level"
+                                placeholder="Professional Proficiency"
+                              />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      }
+
+                      @if (languagesArray.length === 0) {
+                        <div
+                          class="rounded-xl border border-dashed border-slate-300 p-10 text-center"
+                        >
+                          <p class="text-sm text-slate-500">No languages added yet.</p>
+                        </div>
+                      }
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <div class="flex justify-between pt-2">
+                  <button mat-stroked-button type="button" matStepperPrevious>
+                    <mat-icon> arrow_back </mat-icon>
+                    Back
+                  </button>
+
+                  <button mat-flat-button color="primary" type="button">
+                    <mat-icon> picture_as_pdf </mat-icon>
+
+                    Generate PDF
+                  </button>
+                </div>
+              </div>
+            </mat-step>
+          </mat-horizontal-stepper>
         </form>
       </section>
 
+      <!-- ===================================================== -->
       <!-- JSON -->
+      <!-- ===================================================== -->
+
       @if (showJson()) {
         <section class="min-w-0">
           <mat-card class="h-full overflow-hidden">
@@ -179,26 +1077,34 @@
               </div>
 
               <div class="flex gap-2">
-                <button mat-stroked-button type="button" (click)="formatJson()">Format</button>
+                <button mat-stroked-button type="button" (click)="formatJson()">
+                  <mat-icon> format_align_left </mat-icon>
 
-                <button mat-stroked-button type="button" (click)="copyJson()">Copy</button>
+                  Format
+                </button>
+
+                <button mat-stroked-button type="button" (click)="copyJson()">
+                  <mat-icon> content_copy </mat-icon>
+
+                  Copy
+                </button>
               </div>
             </mat-card-header>
 
             <mat-card-content class="pt-6">
               <textarea
-                class="min-h-[700px] w-full resize-y rounded-lg border border-slate-300 bg-slate-950 p-4 font-mono text-sm leading-6 text-slate-100 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                class="min-h-[800px] w-full resize-y rounded-lg border border-slate-300 bg-slate-950 p-4 font-mono text-sm leading-6 text-slate-100 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
                 [value]="jsonInput()"
                 (input)="onJsonInput($event)"
                 spellcheck="false"
-                aria-label="Resume JSON"
               ></textarea>
 
               @if (jsonError()) {
                 <div
                   class="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
                 >
-                  <strong>Invalid JSON:</strong>
+                  <strong> Invalid JSON: </strong>
+
                   {{ jsonError() }}
                 </div>
               } @else {
