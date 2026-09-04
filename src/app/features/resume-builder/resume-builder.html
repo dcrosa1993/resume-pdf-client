@@ -19,13 +19,31 @@
           {{ showJson() ? 'Hide JSON' : 'View JSON' }}
         </button>
 
-        <button mat-flat-button color="primary" type="button">
-          <mat-icon> picture_as_pdf </mat-icon>
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="generatingPdf()"
+          (click)="generatePdf()"
+        >
+          @if (generatingPdf()) {
+            <mat-icon> hourglass_top </mat-icon>
 
-          Generate PDF
+            Generating...
+          } @else {
+            <mat-icon> picture_as_pdf </mat-icon>
+
+            Generate PDF
+          }
         </button>
       </div>
     </header>
+
+    @if (pdfError()) {
+      <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        {{ pdfError() }}
+      </div>
+    }
 
     <!-- Main -->
     <div
@@ -303,47 +321,53 @@
                           <!-- Achievements -->
 
                           <div class="mt-6">
-                            <div class="mb-3 flex items-center justify-between">
+                            <div class="mb-3">
                               <h4 class="font-medium text-slate-700">Achievements</h4>
 
-                              <button
-                                mat-stroked-button
-                                type="button"
-                                (click)="addAchievement(experienceIndex)"
+                              <p class="mt-1 text-sm text-slate-500">
+                                Add measurable results, accomplishments and key contributions.
+                              </p>
+                            </div>
+
+                            <mat-form-field appearance="outline" class="w-full">
+                              <mat-label> Add achievement </mat-label>
+
+                              <input
+                                matInput
+                                placeholder="Reduced API response time by 35%"
+                                (keydown.enter)="addAchievementFromInput(experienceIndex, $event)"
+                              />
+
+                              <mat-hint> Press Enter to add an achievement. </mat-hint>
+                            </mat-form-field>
+
+                            @if (getAchievements(experienceIndex).length > 0) {
+                              <mat-chip-set
+                                class="mt-2 flex flex-wrap gap-2"
+                                aria-label="Achievements"
                               >
-                                <mat-icon> add </mat-icon>
-                                Add Achievement
-                              </button>
-                            </div>
-
-                            <div formArrayName="achievements" class="space-y-2">
-                              @for (
-                                achievement of getAchievements(experienceIndex).controls;
-                                track $index;
-                                let achievementIndex = $index
-                              ) {
-                                <div class="flex gap-2">
-                                  <mat-form-field appearance="outline" class="flex-1">
-                                    <mat-label> Achievement </mat-label>
-
-                                    <input
-                                      matInput
-                                      [formControlName]="achievementIndex"
-                                      placeholder="Reduced API response time by 35%"
-                                    />
-                                  </mat-form-field>
-
-                                  <button
-                                    mat-icon-button
-                                    color="warn"
-                                    type="button"
-                                    (click)="removeAchievement(experienceIndex, achievementIndex)"
+                                @for (
+                                  achievement of getAchievements(experienceIndex).controls;
+                                  track $index;
+                                  let achievementIndex = $index
+                                ) {
+                                  <mat-chip
+                                    [removable]="true"
+                                    (removed)="removeAchievement(experienceIndex, achievementIndex)"
                                   >
-                                    <mat-icon> delete </mat-icon>
-                                  </button>
-                                </div>
-                              }
-                            </div>
+                                    {{ achievement.value }}
+
+                                    <button
+                                      matChipRemove
+                                      type="button"
+                                      [attr.aria-label]="'Remove ' + achievement.value"
+                                    >
+                                      <mat-icon> cancel </mat-icon>
+                                    </button>
+                                  </mat-chip>
+                                }
+                              </mat-chip-set>
+                            }
                           </div>
 
                           <!-- Technologies -->
@@ -1048,10 +1072,22 @@
                     Back
                   </button>
 
-                  <button mat-flat-button color="primary" type="button">
-                    <mat-icon> picture_as_pdf </mat-icon>
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    type="button"
+                    [disabled]="generatingPdf()"
+                    (click)="generatePdf()"
+                  >
+                    @if (generatingPdf()) {
+                      <mat-icon> hourglass_top </mat-icon>
 
-                    Generate PDF
+                      Generating...
+                    } @else {
+                      <mat-icon> picture_as_pdf </mat-icon>
+
+                      Generate PDF
+                    }
                   </button>
                 </div>
               </div>

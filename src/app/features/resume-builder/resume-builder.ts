@@ -19,8 +19,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { Resume, ResumeTemplate } from '../../core/models/resume';
 import { MatChipsModule } from '@angular/material/chips';
 import { ResumeStateService } from '../../core/services/resume-state';
+import { ResumeApiService } from '../../core/services/resume-api';
 
 import { MatStepperModule } from '@angular/material/stepper';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-resume-builder',
@@ -45,6 +47,12 @@ export class ResumeBuilderComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly resumeState = inject(ResumeStateService);
+
+  private readonly resumeApi = inject(ResumeApiService);
+
+  readonly generatingPdf = signal(false);
+
+  readonly pdfError = signal<string | null>(null);
 
   readonly showJson = signal(false);
   readonly jsonError = signal<string | null>(null);
@@ -151,6 +159,29 @@ export class ResumeBuilderComponent {
     await navigator.clipboard.writeText(this.jsonInput());
   }
 
+  async generatePdf(): Promise<void> {
+    if (this.generatingPdf()) {
+      return;
+    }
+
+    this.generatingPdf.set(true);
+    this.pdfError.set(null);
+
+    try {
+      const resume = this.resumeState.resume();
+
+      const blob = await firstValueFrom(this.resumeApi.generatePdf(resume));
+
+      this.downloadPdf(blob, this.buildFileName(resume));
+    } catch (error) {
+      console.error('Failed to generate PDF', error);
+
+      this.pdfError.set('Unable to generate the PDF. Please try again.');
+    } finally {
+      this.generatingPdf.set(false);
+    }
+  }
+
   // ----------------------------------------------------
   // FormArray getters
   // ----------------------------------------------------
@@ -216,6 +247,28 @@ export class ResumeBuilderComponent {
     const experience = this.experienceArray.at(experienceIndex);
 
     this.getAchievements(experienceIndex).removeAt(achievementIndex);
+  }
+
+  addAchievementFromInput(experienceIndex: number, event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    const value = input.value.trim();
+
+    if (!value) {
+      return;
+    }
+
+    const achievements = this.getAchievements(experienceIndex);
+
+    const exists = achievements.controls.some(
+      (control) => control.value.toLowerCase() === value.toLowerCase(),
+    );
+
+    if (!exists) {
+      achievements.push(this.createStringControl(value));
+    }
+
+    input.value = '';
   }
 
   addExperienceTechnology(experienceIndex: number): void {
@@ -625,5 +678,30 @@ export class ResumeBuilderComponent {
 
       level: [value?.level ?? ''],
     });
+  }
+  private downloadPdf(blob: Blob, fileName: string): void {
+    const url = URL.createObjectURL(blob);
+
+    const anchor = document.createElement('a');
+
+    anchor.href = url;
+    anchor.download = fileName;
+
+    document.body.appendChild(anchor);
+
+    anchor.click();
+
+    anchor.remove();
+
+    URL.revokeObjectURL(url);
+  }
+
+  private buildFileName(resume: Resume): string {
+    const fullName = `${resume.personal.firstName}-${resume.personal.lastName}`
+      .trim()
+      .replace(/\s+/g, '-')
+      .toLowerCase();
+
+    return `${fullName || 'resume'}.pdf`;
   }
 }
