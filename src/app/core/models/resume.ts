@@ -1,5 +1,10 @@
+export type ResumeTemplate =
+  | 'classic'
+  | 'modern'
+  | 'compact';
+
 export interface Resume {
-  template?: ResumeTemplate;
+  template: ResumeTemplate;
   personal: PersonalInfo;
   summary?: string;
   experience: Experience[];
@@ -9,11 +14,6 @@ export interface Resume {
   languages?: Language[];
   projects?: Project[];
 }
-
-export type ResumeTemplate =
-  | 'classic'
-  | 'modern'
-  | 'compact';
 
 export interface PersonalInfo {
   firstName: string;
@@ -69,4 +69,39 @@ export interface Project {
   description: string;
   technologies?: string[];
   url?: string;
+}
+
+export function createEmptyResume(): Resume {
+  return {
+    template: 'classic',
+
+    personal: {
+      firstName: '',
+      lastName: '',
+      jobTitle: '',
+      email: '',
+      phone: '',
+      location: '',
+      linkedin: '',
+      github: '',
+      website: '',
+    },
+
+    summary: '',
+
+    experience: [],
+
+    education: [],
+
+    skills: {
+      technical: [],
+      soft: [],
+    },
+
+    certifications: [],
+
+    languages: [],
+
+    projects: [],
+  };
 }

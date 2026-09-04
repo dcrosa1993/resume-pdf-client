@@ -1,8 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ResumeBuilderComponent } from "./features/resume-builder/resume-builder";
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ResumeBuilderComponent],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',

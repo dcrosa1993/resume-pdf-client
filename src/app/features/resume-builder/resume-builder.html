@@ -1,1 +1,217 @@
-<p>resume-builder works!</p>
+<div class="min-h-screen bg-slate-100 px-4 py-6 md:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <!-- Header -->
+    <header class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">Resume Builder</h1>
+
+        <p class="mt-1 text-sm text-slate-500">
+          Create an ATS-friendly resume and generate a PDF from structured data.
+        </p>
+      </div>
+
+      <div class="flex gap-2">
+        <button mat-stroked-button type="button" (click)="toggleJson()">
+          {{ showJson() ? 'Hide JSON' : 'View JSON' }}
+        </button>
+
+        <button mat-flat-button color="primary" type="button">Generate PDF</button>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <div
+      class="grid gap-6"
+      [class.lg:grid-cols-2]="showJson()"
+      [class.lg:grid-cols-1]="!showJson()"
+    >
+      <!-- FORM -->
+      <section>
+        <form [formGroup]="form" class="space-y-6">
+          <!-- Personal Information -->
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title> Personal Information </mat-card-title>
+
+              <mat-card-subtitle>
+                Your basic contact and professional information.
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="pt-6">
+              <div formGroupName="personal" class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <mat-form-field appearance="outline">
+                  <mat-label>First Name</mat-label>
+
+                  <input matInput formControlName="firstName" autocomplete="given-name" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Last Name</mat-label>
+
+                  <input matInput formControlName="lastName" autocomplete="family-name" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Job Title</mat-label>
+
+                  <input
+                    matInput
+                    formControlName="jobTitle"
+                    placeholder="Senior Software Engineer"
+                  />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Email</mat-label>
+
+                  <input matInput type="email" formControlName="email" autocomplete="email" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Phone</mat-label>
+
+                  <input matInput formControlName="phone" autocomplete="tel" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Location</mat-label>
+
+                  <input matInput formControlName="location" placeholder="Miami, FL" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="md:col-span-2">
+                  <mat-label>LinkedIn</mat-label>
+
+                  <input
+                    matInput
+                    type="url"
+                    formControlName="linkedin"
+                    placeholder="https://linkedin.com/in/..."
+                  />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="md:col-span-2">
+                  <mat-label>GitHub</mat-label>
+
+                  <input
+                    matInput
+                    type="url"
+                    formControlName="github"
+                    placeholder="https://github.com/..."
+                  />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="md:col-span-2">
+                  <mat-label>Website</mat-label>
+
+                  <input
+                    matInput
+                    type="url"
+                    formControlName="website"
+                    placeholder="https://example.com"
+                  />
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Template -->
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title> Resume Template </mat-card-title>
+
+              <mat-card-subtitle> Choose how your resume will be rendered. </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="pt-6">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Template</mat-label>
+
+                <mat-select formControlName="template">
+                  <mat-option value="classic"> Classic </mat-option>
+
+                  <mat-option value="modern"> Modern </mat-option>
+
+                  <mat-option value="compact"> Compact </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Summary -->
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title> Professional Summary </mat-card-title>
+
+              <mat-card-subtitle>
+                A concise summary of your professional profile.
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="pt-6">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Summary</mat-label>
+
+                <textarea
+                  matInput
+                  formControlName="summary"
+                  rows="7"
+                  placeholder="Experienced software engineer with..."
+                ></textarea>
+              </mat-form-field>
+            </mat-card-content>
+          </mat-card>
+        </form>
+      </section>
+
+      <!-- JSON -->
+      @if (showJson()) {
+        <section class="min-w-0">
+          <mat-card class="h-full overflow-hidden">
+            <mat-card-header
+              class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+            >
+              <div>
+                <mat-card-title> Resume JSON </mat-card-title>
+
+                <mat-card-subtitle> Edit the API payload directly. </mat-card-subtitle>
+              </div>
+
+              <div class="flex gap-2">
+                <button mat-stroked-button type="button" (click)="formatJson()">Format</button>
+
+                <button mat-stroked-button type="button" (click)="copyJson()">Copy</button>
+              </div>
+            </mat-card-header>
+
+            <mat-card-content class="pt-6">
+              <textarea
+                class="min-h-[700px] w-full resize-y rounded-lg border border-slate-300 bg-slate-950 p-4 font-mono text-sm leading-6 text-slate-100 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                [value]="jsonInput()"
+                (input)="onJsonInput($event)"
+                spellcheck="false"
+                aria-label="Resume JSON"
+              ></textarea>
+
+              @if (jsonError()) {
+                <div
+                  class="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                >
+                  <strong>Invalid JSON:</strong>
+                  {{ jsonError() }}
+                </div>
+              } @else {
+                <div
+                  class="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+                >
+                  JSON is valid and synchronized with the form.
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        </section>
+      }
+    </div>
+  </div>
+</div>
