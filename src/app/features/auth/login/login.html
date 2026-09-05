@@ -1,0 +1,33 @@
+<div class="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+  <mat-card class="w-full max-w-md">
+    <mat-card-header>
+      <mat-card-title> Welcome </mat-card-title>
+
+      <mat-card-subtitle> Sign in to save and manage your resumes. </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="pt-6">
+      <button
+        mat-stroked-button
+        type="button"
+        class="!h-12 w-full"
+        [disabled]="signingIn()"
+        (click)="loginWithGoogle()"
+      >
+        <mat-icon> login </mat-icon>
+
+        @if (signingIn()) {
+          Signing in...
+        } @else {
+          Continue with Google
+        }
+      </button>
+
+      @if (error()) {
+        <div class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {{ error() }}
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

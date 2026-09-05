@@ -16,4 +16,14 @@ export const routes: Routes = [
           component.ResumeBuilderComponent,
       ),
   },
+  {
+    path: 'Login',
+    loadComponent: () =>
+      import(
+        './features/auth/login/login'
+      ).then(
+        (component) =>
+          component.LoginComponent,
+      ),
+  },
 ];

@@ -27,13 +27,17 @@
           (click)="generatePdf()"
         >
           @if (generatingPdf()) {
-            <mat-icon> hourglass_top </mat-icon>
+            <div class="flex flex-row gap-2 justify-center items-center">
+              <mat-icon> hourglass_top </mat-icon>
 
-            Generating...
+              <div>Generating...</div>
+            </div>
           } @else {
-            <mat-icon> picture_as_pdf </mat-icon>
+            <div class="flex flex-row gap-2 justify-center items-center">
+              <mat-icon> picture_as_pdf </mat-icon>
 
-            Generate PDF
+              <div>Generate PDF</div>
+            </div>
           }
         </button>
       </div>
@@ -1080,13 +1084,17 @@
                     (click)="generatePdf()"
                   >
                     @if (generatingPdf()) {
-                      <mat-icon> hourglass_top </mat-icon>
+                      <div class="flex flex-row gap-2 justify-center items-center">
+                        <mat-icon> hourglass_top </mat-icon>
 
-                      Generating...
+                        <div>Generating...</div>
+                      </div>
                     } @else {
-                      <mat-icon> picture_as_pdf </mat-icon>
+                      <div class="flex flex-row gap-2 justify-center items-center">
+                        <mat-icon> picture_as_pdf </mat-icon>
 
-                      Generate PDF
+                        <div>Generate PDF</div>
+                      </div>
                     }
                   </button>
                 </div>
