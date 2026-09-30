@@ -24,7 +24,7 @@ RUN npm ci
 COPY . .
 RUN cat > ./src/environments/environment.ts <<'EOF'
 export const environment = {
-  API_URL: '$API_URL',
+  API_URL: 'API_URL',
   firebase: {
     apiKey: 'FIREBASE_API_KEY',
     authDomain: 'FIREBASE_AUTH_DOMAIN',
