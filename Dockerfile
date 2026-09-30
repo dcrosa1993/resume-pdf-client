@@ -58,5 +58,5 @@ ENV FIREBASE_APP_ID=${FIREBASE_APP_ID}
 ARG FIREBASE_MEASUREMENT_ID
 ENV FIREBASE_MEASUREMENT_ID=${FIREBASE_MEASUREMENT_ID}
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=angular /ng-app/dist/museo-virtual/browser /usr/share/nginx/html
+COPY --from=angular /ng-app/dist/resume-pdf-client/browser /usr/share/nginx/html
 EXPOSE 80
