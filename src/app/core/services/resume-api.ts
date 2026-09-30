@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Resume } from '../models/resume';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +11,7 @@ import { Resume } from '../models/resume';
 export class ResumeApiService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl =
-    'http://181.225.255.17:8123';
+  private readonly apiUrl = environment.API_URL;
 
   generatePdf(
     resume: Resume,
