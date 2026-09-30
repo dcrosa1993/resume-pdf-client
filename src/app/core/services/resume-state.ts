@@ -11,12 +11,16 @@ export class ResumeStateService {
 
   readonly json = computed(() => JSON.stringify(this.resumeState(), null, 2));
 
+  readonly photoFile = signal<File | null>(null);
+
   updateResume(resume: Resume): void {
     this.resumeState.set(this.normalizeResume(resume));
   }
 
   reset(): void {
     this.resumeState.set(createEmptyResume());
+
+    this.photoFile.set(null);
   }
 
   updateFromJson(json: string): {
@@ -167,5 +171,13 @@ export class ResumeStateService {
     const normalized = value?.trim();
 
     return normalized ? normalized : undefined;
+  }
+
+  setPhoto(file: File | null): void {
+    this.photoFile.set(file);
+  }
+
+  removePhoto(): void {
+    this.photoFile.set(null);
   }
 }

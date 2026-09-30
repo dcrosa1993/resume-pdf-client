@@ -67,6 +67,83 @@
               <div class="space-y-6 py-6">
                 <mat-card class="flex flex-col gap-4">
                   <mat-card-header>
+                    <mat-card-title> Profile Photo </mat-card-title>
+
+                    <mat-card-subtitle>
+                      Optional. The photo is currently displayed by the Modern template.
+                    </mat-card-subtitle>
+                  </mat-card-header>
+
+                  <mat-card-content class="pt-6">
+                    <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
+                      <!-- Preview -->
+                      <div
+                        class="flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-slate-300 bg-slate-50"
+                      >
+                        @if (photoPreview()) {
+                          <img
+                            [src]="photoPreview()!"
+                            alt="Profile photo preview"
+                            class="h-full w-full object-cover"
+                          />
+                        } @else {
+                          <mat-icon class="!h-10 !w-10 !text-[40px] text-slate-300">
+                            person
+                          </mat-icon>
+                        }
+                      </div>
+
+                      <!-- Controls -->
+                      <div class="flex flex-col gap-3">
+                        <input
+                          #photoInput
+                          type="file"
+                          hidden
+                          accept="image/jpeg,image/png,image/webp"
+                          (change)="onPhotoSelected($event)"
+                        />
+
+                        <div class="flex flex-wrap gap-2">
+                          <button
+                            mat-flat-button
+                            color="primary"
+                            type="button"
+                            (click)="photoInput.click()"
+                          >
+                            <mat-icon> upload </mat-icon>
+
+                            {{ photoPreview() ? 'Change Photo' : 'Upload Photo' }}
+                          </button>
+
+                          @if (photoPreview()) {
+                            <button
+                              mat-stroked-button
+                              color="warn"
+                              type="button"
+                              (click)="removePhoto()"
+                            >
+                              <mat-icon> delete </mat-icon>
+
+                              Remove
+                            </button>
+                          }
+                        </div>
+
+                        <p class="text-xs text-slate-500">JPG, PNG or WebP. Maximum size: 3 MB.</p>
+                      </div>
+                    </div>
+
+                    @if (photoError()) {
+                      <div
+                        class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                      >
+                        {{ photoError() }}
+                      </div>
+                    }
+                  </mat-card-content>
+                </mat-card>
+                <mat-card class="flex flex-col gap-4">
+                  <mat-card-header>
                     <mat-card-title> Personal Information </mat-card-title>
 
                     <mat-card-subtitle>
@@ -158,7 +235,7 @@
 
                   <mat-card-content class="pt-6">
                     <mat-form-field appearance="outline" class="w-full">
-                      <mat-label> Template </mat-label>
+                      <mat-label> Template & Language </mat-label>
 
                       <mat-select formControlName="template">
                         <mat-option value="classic"> Classic </mat-option>
@@ -166,6 +243,18 @@
                         <mat-option value="modern"> Modern </mat-option>
 
                         <mat-option value="compact"> Compact </mat-option>
+
+                        <mat-option value="showcase"> Showcase </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-full">
+                      <mat-label> Language </mat-label>
+
+                      <mat-select formControlName="language">
+                        <mat-option value="en"> English </mat-option>
+
+                        <mat-option value="es"> Spanish </mat-option>
                       </mat-select>
                     </mat-form-field>
                   </mat-card-content>

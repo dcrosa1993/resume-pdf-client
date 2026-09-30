@@ -16,13 +16,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
-import { Resume, ResumeTemplate } from '../../core/models/resume';
+import { Resume, ResumeLanguage, ResumeTemplate } from '../../core/models/resume';
 import { MatChipsModule } from '@angular/material/chips';
 import { ResumeStateService } from '../../core/services/resume-state';
 import { ResumeApiService } from '../../core/services/resume-api';
 
 import { MatStepperModule } from '@angular/material/stepper';
 import { firstValueFrom } from 'rxjs';
+
+import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-resume-builder',
@@ -42,7 +44,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './resume-builder.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResumeBuilderComponent {
+export class ResumeBuilderComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -57,12 +59,18 @@ export class ResumeBuilderComponent {
   readonly showJson = signal(false);
   readonly jsonError = signal<string | null>(null);
   readonly jsonInput = signal('');
+  readonly photoPreview = signal<string | null>(null);
+
+  readonly photoError = signal<string | null>(null);
+
+  private photoPreviewUrl: string | null = null;
 
   private updatingFromState = false;
   private isEditingJson = false;
 
   readonly form = this.fb.nonNullable.group({
     template: ['classic' as ResumeTemplate],
+    language: ['en' as ResumeLanguage],
 
     personal: this.fb.nonNullable.group({
       firstName: [''],
@@ -111,6 +119,10 @@ export class ResumeBuilderComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this.revokePhotoPreview();
+  }
+
   // ----------------------------------------------------
   // UI
   // ----------------------------------------------------
@@ -142,6 +154,53 @@ export class ResumeBuilderComponent {
     }
   }
 
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.photoError.set(null);
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+    if (!allowedTypes.includes(file.type)) {
+      this.photoError.set('Please select a JPG, PNG or WebP image.');
+
+      input.value = '';
+
+      return;
+    }
+
+    const maxSize = 3 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      this.photoError.set('The profile photo must be smaller than 3 MB.');
+
+      input.value = '';
+
+      return;
+    }
+
+    this.resumeState.setPhoto(file);
+
+    this.createPhotoPreview(file);
+
+    input.value = '';
+  }
+
+  removePhoto(): void {
+    this.resumeState.removePhoto();
+
+    this.revokePhotoPreview();
+
+    this.photoPreview.set(null);
+    this.photoError.set(null);
+  }
+
   formatJson(): void {
     const value = this.jsonInput();
 
@@ -170,11 +229,13 @@ export class ResumeBuilderComponent {
     try {
       const resume = this.resumeState.resume();
 
-      const blob = await firstValueFrom(this.resumeApi.generatePdf(resume));
+      const photo = this.resumeState.photoFile();
+
+      const blob = await firstValueFrom(this.resumeApi.generatePdf(resume, photo));
 
       this.downloadPdf(blob, this.buildFileName(resume));
     } catch (error) {
-      console.error('Failed to generate PDF', error);
+      console.error('Failed to generate PDF:', error);
 
       this.pdfError.set('Unable to generate the PDF. Please try again.');
     } finally {
@@ -460,6 +521,7 @@ export class ResumeBuilderComponent {
 
       const resume: Resume = {
         template: value.template ?? 'classic',
+        language: value.language ?? 'en',
 
         personal: {
           firstName: value.personal?.firstName ?? '',
@@ -508,6 +570,10 @@ export class ResumeBuilderComponent {
     this.updatingFromState = true;
 
     this.form.controls.template.setValue(resume.template ?? 'classic', {
+      emitEvent: false,
+    });
+
+    this.form.controls.language.setValue(resume.language ?? 'en', {
       emitEvent: false,
     });
 
@@ -703,5 +769,23 @@ export class ResumeBuilderComponent {
       .toLowerCase();
 
     return `${fullName || 'resume'}.pdf`;
+  }
+
+  private createPhotoPreview(file: File): void {
+    this.revokePhotoPreview();
+
+    const url = URL.createObjectURL(file);
+
+    this.photoPreviewUrl = url;
+
+    this.photoPreview.set(url);
+  }
+
+  private revokePhotoPreview(): void {
+    if (this.photoPreviewUrl) {
+      URL.revokeObjectURL(this.photoPreviewUrl);
+
+      this.photoPreviewUrl = null;
+    }
   }
 }

@@ -3,8 +3,13 @@ export type ResumeTemplate =
   | 'modern'
   | 'compact';
 
+export type ResumeLanguage =
+  | 'en'
+  | 'es'
+
 export interface Resume {
   template: ResumeTemplate;
+  language: ResumeLanguage;
   personal: PersonalInfo;
   summary?: string;
   experience: Experience[];
@@ -74,6 +79,7 @@ export interface Project {
 export function createEmptyResume(): Resume {
   return {
     template: 'classic',
+    language: 'en',
 
     personal: {
       firstName: '',
