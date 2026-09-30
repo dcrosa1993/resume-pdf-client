@@ -1,0 +1,45 @@
+# syntax=docker/dockerfile:1
+FROM node:24.13.0 as angular
+ARG API_URL
+ENV API_URL=${API_URL}
+
+ARG FIREBASE_API_KEY
+ENV FIREBASE_API_KEY=${FIREBASE_API_KEY}
+ARG FIREBASE_AUTH_DOMAIN
+ENV FIREBASE_AUTH_DOMAIN=${FIREBASE_API_KEY}
+ARG FIREBASE_PROJECT_ID
+ENV FIREBASE_PROJECT_ID=${FIREBASE_API_KEY}
+ARG FIREBASE_STORAGE_BUCKET
+ENV FIREBASE_STORAGE_BUCKET=${FIREBASE_API_KEY}
+ARG FIREBASE_MESSAGING_SENDER_ID
+ENV FIREBASE_MESSAGING_SENDER_ID=${FIREBASE_API_KEY}
+ARG FIREBASE_APP_ID
+ENV FIREBASE_APP_ID=${FIREBASE_API_KEY}
+ARG FIREBASE_MEASUREMENT_ID
+ENV FIREBASE_MEASUREMENT_ID=${FIREBASE_API_KEY}
+
+WORKDIR /ng-app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN echo "export const environment = {
+  API_URL: 'https://museo-api.may.cu',
+  firebase: {
+    apiKey: 'FIREBASE_API_KEY',
+    authDomain: 'FIREBASE_AUTH_DOMAIN',
+    projectId: 'FIREBASE_PROJECT_ID',
+    storageBucket: 'FIREBASE_STORAGE_BUCKET',
+    messagingSenderId: 'FIREBASE_MESSAGING_SENDER_ID',
+    appId: 'FIREBASE_APP_ID',
+    measurementId: 'FIREBASE_MEASUREMENT_ID'
+  }
+};" > ./src/environments/environment.ts
+RUN npm run build
+
+
+FROM nginx:alpine
+ARG API_URL
+ENV API_URL=${API_URL}
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=angular /ng-app/dist/museo-virtual/browser /usr/share/nginx/html
+EXPOSE 80
