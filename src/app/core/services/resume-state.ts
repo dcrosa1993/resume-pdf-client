@@ -138,7 +138,7 @@ export class ResumeStateService {
 
         description: this.emptyToUndefined(experience.description),
 
-        achievements: experience.achievements.filter((achievement) => achievement.trim() !== ''),
+        achievements: experience.achievements?.filter((achievement) => achievement.trim() !== ''),
 
         technologies: experience.technologies?.filter((technology) => technology.trim() !== ''),
       })),
@@ -154,7 +154,7 @@ export class ResumeStateService {
       })),
 
       skills: {
-        technical: resume.skills.technical.filter((skill) => skill.trim() !== ''),
+        technical: resume.skills.technical?.filter((skill) => skill.trim() !== ''),
 
         soft: resume.skills.soft?.filter((skill) => skill.trim() !== ''),
       },
